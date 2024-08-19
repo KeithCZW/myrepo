@@ -1,13 +1,16 @@
 # Import flask and datetime module for showing date and time
 from flask import Flask
+from flask.helpers import send_from_directory
+from flask_cors import CORS, cross_origin
 import random
 
 
 # Initializing flask app
-app = Flask(__name__)
-
+app = Flask(__name__, static_folder='workshop01/frontend/webapp/build', static_url_path='')
+cors = CORS(app)
 # Route for seeing a data
 @app.route('/line')
+@cross_origin()
 def get_line():
     list = [
         "Logic will get you from A to B. Imagination will take you everywhere.",
@@ -21,6 +24,10 @@ def get_line():
 
     return {"sentence":random.choice(list)}
 
+@app.route('/')
+@cross_origin()
+def serve():
+    return send_from_directory(app.static_folder, 'index.html')
 # Running app
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
